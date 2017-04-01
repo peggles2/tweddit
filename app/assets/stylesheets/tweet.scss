@@ -1,0 +1,37 @@
+#tweddit_container {
+  .tweet_list {
+    margin-top:35px;
+    background-color: #e8e8ee;
+  }
+  .vote {
+    display: inline-block;
+    margin-left:20px;
+  }
+  .vote span {
+    margin-top:5px;
+    padding-right:10px;
+    color: black;
+  }
+  span.vote-up.selected {
+    color: green;
+  }
+  span.vote-down.selected {
+    color: brown;
+  }
+  a.delete_tweet {
+    margin-top:3px;
+  }
+  .comment {
+    margin-top: 10px;
+  }
+  .new_comment {
+    margin-top: 10px;
+  }
+  #tweet_message {
+    margin-top:20px;
+  }
+  textarea#tweet_message {
+    width: 100%;
+    height: 50px;
+  }
+}

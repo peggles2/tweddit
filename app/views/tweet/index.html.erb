@@ -1,0 +1,68 @@
+<div id="user" class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <% if user_signed_in? %>
+        <div class="user_info pull-right"> 
+          <%= current_user.email %> 
+          |  <span data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="<%= get_people(current_user.get_friends) if current_user.get_friends.present? %>">
+               friends <%= current_user.get_friends.count%>
+             </span>
+          | <span data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="<%= get_people(current_user.get_frenemies) if current_user.get_frenemies.present? %>">
+               frenemies <%= current_user.get_frenemies.count%>
+             </span>
+          | <span data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="<%= get_karma(current_user.get_karma) if current_user.get_karma.present? %>">karma <%= current_user.get_karma %></span>
+          | <%= link_to(" Logout", destroy_user_session_path, :method => :delete) %>  
+        </div>
+      <% else %>
+        <%= link_to('Login', new_user_session_path, class: "pull-right")  %>  
+      <% end %>          
+    </div>
+  </div>
+</div>
+<div id="tweddit_container" class="container">
+  <div class="row">
+    <div class="col-md-12"><h2>Welcome to Tweddit</h2></div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <%= form_for @tweet, url: {action: "create"}, method: :POST, html: {class: "tweet_form"} do |f| %>
+        <%= f.text_area :message, placeholder: "whats on your mind?", column: 4 %>
+        <%= f.submit "Tweet" %>
+      <% end %>
+    </div>
+  </div>
+  <% @tweets.each do |tweet| %>
+    <div class="row tweet_list">
+      <div class="col-md-6">
+        <b><%= simple_format(  "#{tweet.user.email if tweet.user.present?}  says: #{tweet.message}") %></b>
+      </div>
+      <div class="tweet_container col-md-6">
+        <a href="" class="pull-right delete_tweet" name="Delete" value="delete" data-disable-with="Delete">x</a>
+        <div class="vote pull-right">
+          <%= tweet.like.count if tweet.like.present?%>
+          <a href="" class="vote_up"><span data-toggle="popover" data-trigger="hover" data-content="<%= get_people(tweet.like) if tweet.like.present? %>" class=" vote-up pull-right glyphicon fa fa-thumbs-up <%= get_selected(tweet.like) %>"></span></a>
+        </div>
+        <div class="vote pull-right">
+          <%= tweet.dislike.count if tweet.dislike.present?%>
+          <a href="" class="vote_down"><span data-toggle="popover" data-trigger="hover" data-content="<%= get_people(tweet.dislike) if tweet.dislike.present? %>" class="vote-down fa fa-thumbs-down <%= get_selected(tweet.dislike) %>"></span></a>
+        </div>
+        <input class="tweet_id" type="hidden" name="tweet_id" value="<%= tweet.id%>">
+      </div>
+    </div>
+    
+    <%  tweet.comments.each do |comment|%>
+    <div class="comment row">
+      <div class="col-md-12"><%= simple_format("#{comment.message}  -by #{comment.user.email}") %>  </div>
+    </div>
+    <%  end %>
+    <div class="new_comment row">
+      <div class="col-md-12">
+        <%= form_for @comment, url: {action: "create_comment"}, method: :POST, html: {class: "comment_form"} do |f| %>
+          <%= f.hidden_field :tweet_id, value: tweet.id %> 
+          <%= f.text_field :message, value: "" %>
+          <%= f.submit "comment" %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
