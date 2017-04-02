@@ -9,7 +9,7 @@ module UserHelper
   
   def get_karma(score)
     karma_message = ""
-    if score < 5
+    if score > 0 && score < 5
       karma_message =  'Oh your karma is low, hiring Parissa will help'
     elsif score > 5 && score < 8 
       karma_message =  'Your karma is getting there, I suggest hiring Parissa to help it '
