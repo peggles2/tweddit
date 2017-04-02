@@ -1,17 +1,20 @@
 class TweetController < ApplicationController
   before_action :authenticate_user!
-  #attr_accessor :message, comment: [:message, :twitter_id]
+
+  #List all the tweets
   def index
     @tweet   = Tweet.new
     @comment = Comment.new
     @tweets  = Tweet.all.order('created_at DESC')
     @friends = current_user.get_friends
   end
- 
+
+  #delete tweets 
   def destroy
     @tweet = Tweet.find(params[:id]).destroy
   end
-  
+ 
+  #add user email to like, or dislike. Check if already liked/disliked before adding the user 
   def vote
     id        = params[:id]
     @tweet    = Tweet.find(id)
@@ -34,24 +37,37 @@ class TweetController < ApplicationController
     end
     @tweet.save!
   end
-  
+
+  #Add comment to a tweet  
   def create_comment
     comment  = params[:comment]
     tweet_id = comment[:tweet_id]
     @tweet   = Tweet.find(tweet_id)
-    @comment = @tweet.comments.create({message: comment[:message], user_id: current_user.id})
+    @comment = @tweet.comments.create(comment_params.merge(user_id: current_user.id))
     @comment = Comment.new
     
     redirect_to action: "index"
   end
   
+  #Add a new tweet  
   def create
     tweet    = params[:tweet]
     message  = tweet[:message]
-    @tweet   = current_user.tweets.create({message: message})
+    @tweet   = current_user.tweets.create(tweet_params)
     @comment = Comment.new
     
     redirect_to action: "index"
   end
   
+  private
+ 
+  #STRONG PARAMS 
+  def tweet_params
+    params.require(:tweet).permit(:message)
+  end
+  
+  def comment_params
+    params[:user_id] = current_user.id
+    params.require(:comment).permit(:message,:user_id)
+  end
 end

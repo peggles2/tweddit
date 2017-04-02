@@ -52,7 +52,7 @@
     
     <%  tweet.comments.each do |comment|%>
     <div class="comment row">
-      <div class="col-md-12"><%= simple_format("#{comment.message}  -by #{comment.user.email}") %>  </div>
+      <div class="col-md-12"><%= simple_format("#{comment.message}  -by #{comment.user.email if comment.user.present?}") %>  </div>
     </div>
     <%  end %>
     <div class="new_comment row">

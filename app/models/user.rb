@@ -6,6 +6,7 @@ class User < ApplicationRecord
 
   has_many :tweets
   
+  #Get array of friends
   def get_friends
     friends = []
     tweets.each do |tweet|
@@ -14,6 +15,7 @@ class User < ApplicationRecord
     friends.flatten.uniq
   end
   
+  #Get array of frenemies
   def get_frenemies
     frenemies = []
     tweets.each do |tweet|
@@ -22,6 +24,7 @@ class User < ApplicationRecord
     frenemies.flatten.uniq
   end
   
+  #Calculate Karma
   def get_karma
     friends         = get_friends
     total_friends   = get_friends.count
