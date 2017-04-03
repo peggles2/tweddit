@@ -37,7 +37,9 @@
         <b><%= simple_format(  "#{tweet.user.email if tweet.user.present?}  says: #{tweet.message}") %></b>
       </div>
       <div class="tweet_container col-md-6">
-        <a href="" class="pull-right delete_tweet" name="Delete" value="delete" data-disable-with="Delete">x</a>
+        <% if tweet.user.id == current_user.id %>
+          <a href="" class="pull-right delete_tweet"  data-disable-with="x">x</a>
+        <% end %>
         <div class="vote pull-right">
           <%= tweet.like.count if tweet.like.present?%>
           <a href="" class="vote_up"><span data-toggle="popover" data-trigger="hover" data-content="<%= get_people(tweet.like) if tweet.like.present? %>" class=" vote-up pull-right glyphicon fa fa-thumbs-up <%= get_selected(tweet.like) %>"></span></a>

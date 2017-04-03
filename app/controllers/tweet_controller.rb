@@ -11,7 +11,14 @@ class TweetController < ApplicationController
 
   #delete tweets 
   def destroy
-    @tweet = Tweet.find(params[:id]).destroy
+    @tweet  = Tweet.find(params[:id])
+    #make sure the user is the owner of the tweet
+    user_id = @tweet.user.id 
+    if user_id == current_user.id
+      @tweet = Tweet.find(params[:id]).destroy
+    else
+      Rails.warn("The tweet does not belong to the user to delete")
+    end
   end
  
   #add user email to like, or dislike. Check if already liked/disliked before adding the user 
